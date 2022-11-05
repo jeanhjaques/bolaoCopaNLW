@@ -29,9 +29,9 @@ model Participant {
   id     String  @id @default(cuid())
   userId String
   poolId String
-  Guess  Guess[]
+  guesses  Guess[]
 
-  User User @relation(fields: [userId], references: [id])
+  user User @relation(fields: [userId], references: [id])
   pool Pool @relation(fields: [poolId], references: [id])
 
   @@unique([userId, poolId])
@@ -41,6 +41,7 @@ model User {
   id        String   @id @default(cuid())
   name      String
   email     String   @unique
+  googleId  String?  @unique
   avatarUrl String?
   createdAt DateTime @default(now())
 
@@ -58,7 +59,7 @@ model Game {
 
 model Guess {
   id               String   @id @default(cuid())
-  firtsTeamPoints  Int
+  firstTeamPoints  Int
   secondTeamPoints Int
   createdAt        DateTime @default(now())
   participantId    String
@@ -66,4 +67,6 @@ model Guess {
 
   participant Participant @relation(fields: [participantId], references: [id])
   game        Game        @relation(fields: [gameId], references: [id])
+
+  @@unique([participantId, gameId])
 }
